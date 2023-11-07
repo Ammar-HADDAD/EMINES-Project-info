@@ -8,26 +8,30 @@ import Nomenclature from "./Components/Nomenclature";
 import Stock from "./Components/Stock";
 import Operation from "./Components/Operation";
 
-function main() {
+const App = () => {
   return (
-
     <BrowserRouter>
-    <Routes>
-    <Route path="/" element={<Signin />}></Route>
-          <Route path="/signup" element={<Signup />}></Route>
-    </Routes>
-      <Navbar />
+      <Routes>
+        <Route path="/" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+
+      </Routes>
+
+
+      {window.location.pathname !== '/' && window.location.pathname !== '/signup' && <Navbar />}
+
       <div className="container">
         <Routes>
-          <Route path="/dashboard" Component={Dashboard} />
-          <Route path="/produit" Component={Produit} />
-          <Route path="/nomenclature" Component={Nomenclature} />
-          <Route path="/stock" Component={Stock} />
-          <Route path="/operation" Component={Operation} />
-          
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/produit" element={<Produit />} />
+          <Route path="/nomenclature" element={<Nomenclature />} />
+          <Route path="/stock" element={<Stock />} />
+          <Route path="/operation" element={<Operation />} />
         </Routes>
       </div>
     </BrowserRouter>
   );
-}
-export default main;
+};
+
+export default App;
+
