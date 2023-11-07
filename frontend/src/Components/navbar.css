@@ -1,0 +1,82 @@
+nav{  
+    position: absolute; /* Set the position to fixed */
+  top: 0; /* Place it at the top of the viewport */
+  left: 0; /* Align it with the left edge of the viewport */
+  right: 0; 
+    display:flex;
+    align-items:center;
+    /*justify-content:space-between;*/
+    background:#053B50;   
+    height: 58px;
+    width:1265px;
+}
+
+#navbar {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+#navbar li{
+    list-style:none;
+    padding:0 50px;
+    position:relative;
+   
+}
+
+#navbar li a div{
+    height: 50px;
+    width: 50px;
+   
+    border-radius:50% 50% 50% 50% / 65% 65% 35% 35%   ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5px; 
+    transition: background-color 0.3s ease-in-out; 
+    padding-left: 5px;
+}
+#navbar li a div div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.iconoperation, .iconstock{
+    width:35px;
+    height:30px;   
+}
+
+
+#navbar li a div div svg:hover {
+fill:#64CCC5;
+}
+
+#navbar li a div div{
+    height: 39px;
+    width: 39px;
+    border-radius: 50%;
+    background-color: #053B50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 2px;
+}
+
+
+.ll svg{
+    fill:#B2A4A4;
+}
+
+
+.active div{
+    transform: translateY(20px);
+    background-color:#fff;
+}
+.active div div{
+    transform: translateY(0px);
+}
+.active svg{
+    fill: #64CCC5;
+  }
+

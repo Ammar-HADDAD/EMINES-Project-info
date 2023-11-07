@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "analysis": "^0.4.2",
     "axios": "^1.5.1",
     "crypto-js": "^4.1.1",
     "react": "^18.2.0",
