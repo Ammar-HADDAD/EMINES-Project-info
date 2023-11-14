@@ -38,6 +38,21 @@ app.post("/signin", (req, res) => {
   });
 });
 
+app.post("/signin", (req, res) => {
+  const sql = "SELECT * FROM `users` WHERE `email` = ? AND `password` = ?";
+  db.query(sql, [req.body.email, req.body.password], (err, data) => {
+    if (err) {
+      return res.json("Error");
+    }
+    if (data.length > 0) {
+      return res.json("Success");
+    } else {
+      return res.json("Fail");
+    }
+  });
+});
+
+
 app.listen(8001, () => {
   console.log("listening on port 8001");
 });

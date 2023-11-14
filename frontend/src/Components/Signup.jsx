@@ -35,7 +35,7 @@ function Signup() {
   };
   return (
     <>
-      <div className="container">
+      <div className="container Ndcontainer">
         <div className="registration form">
           <header>Sign Up</header>
           <form action="" onSubmit={handleSubmit}>

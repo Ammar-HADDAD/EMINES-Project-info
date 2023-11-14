@@ -7,6 +7,7 @@ import Navbar from "./Components/navbar";
 import Nomenclature from "./Components/Nomenclature";
 import Stock from "./Components/Stock";
 import Operation from "./Components/Operation";
+import './App.css';
 
 const App = () => {
   return (
