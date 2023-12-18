@@ -1,24 +1,55 @@
 import "./Produit.css";
 import Modal from "./Modal";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Produit() {
   const [modalOpen, setModalOpen] = useState(false);
-
-
   const [productList, setProductList] = useState([]);
- const [newProduct, setNewProduct] = useState({});
+  const [newProduct, setNewProduct] = useState({});
 
- const handleSubmit = (e) => {
+  useEffect(() => {
+    // This block will execute whenever productList is updated
+    const mappedArray = productList.map((item) => Object.values(item));
+
+    axios
+      .post("http://localhost:8001/insert_products", mappedArray)
+      .then((res) => console.log(res.data))
+      .catch((error) =>
+        console.error("Error sending data to the backend:", error)
+      );
+
+    console.log("Mapped Array:", mappedArray);
+
+    // You can place your axios.post call here if you want it to execute after productList is updated
+  }, [productList]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setProductList([...productList, newProduct]);
+
+    // Validate inputs before adding to the table
+    if (
+      !newProduct.productName ||
+      !newProduct.productPrice ||
+      !newProduct.productDescription ||
+      !newProduct.productStock ||
+      !newProduct.productSource ||
+      !newProduct.productCatégorie
+    ) {
+      // Display an error message or handle the validation failure appropriately
+      alert("Please fill in all fields");
+      return;
+    }
+    // Update the product list
+    setProductList((prevProductList) => [...prevProductList, newProduct]);
+
+    // Clear the form
     setNewProduct({});
- };
+  };
 
- const handleChange = (e) => {
+  const handleChange = (e) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
- };
-
+  };
 
   return (
     <div className="produit">
@@ -27,9 +58,13 @@ function Produit() {
           <div className="title">
             <b>Catalogue des produits</b>
           </div>
-          
 
-          <button className="btnimport" onClick={() => {setModalOpen(true);}}>
+          <button
+            className="btnimport"
+            onClick={() => {
+              setModalOpen(true);
+            }}
+          >
             <svg
               width="16"
               height="16"
@@ -80,7 +115,7 @@ function Produit() {
 
             <b>Importer</b>
           </button>
-          
+
           <button className="btnmodif">
             <svg
               width="21"
@@ -127,92 +162,95 @@ function Produit() {
           >
             <path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
           </svg>
-          <form className="formprod"onSubmit={handleSubmit}>
-        <input
-          className="in"
-          type="text"
-          name="productName"
-          placeholder="Nom"
-          value={newProduct.productName || ''}
-          onChange={handleChange}
-        />
-        <input
-        className="in"
-          type="text"
-          name="productPrice"
-          placeholder="Prix"
-          value={newProduct.productPrice || ''}
-          onChange={handleChange}
-        />
-        <input
-        className="in"
-          type="text"
-          name="productDescription"
-          placeholder="Description"
-          value={newProduct.productDescription || ''}
-          onChange={handleChange}
-        />
-        <input
-        className="in"
-          type="text"
-          name="productStock"
-          placeholder="Stock"
-          value={newProduct.productStock || ''}
-          onChange={handleChange}
-        />
-        <input
-        className="in"
-          type="text"
-          name="productSource"
-          placeholder="Source"
-          value={newProduct.productSource || ''}
-          onChange={handleChange}
-        />
-        <input
-        className="in"
-          type="text"
-          name="productCatégorie"
-          placeholder="Catégorie"
-          value={newProduct.productCatégorie || ''}
-          onChange={handleChange}
-        />
-        <button className="btnajout" type="submit">
-            <svg
-              width="14"
-              height="17"
-              viewBox="0 0 14 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.3236 6.39684H8.09776V1.16306C8.09776 0.520833 7.67723 0 7.15869 0H6.21962C5.70108 0 5.28055 0.520833 5.28055 1.16306V6.39684H1.05473C0.536189 6.39684 0.115662 6.91767 0.115662 7.5599V8.72296C0.115662 9.36519 0.536189 9.88602 1.05473 9.88602H5.28055V15.1198C5.28055 15.762 5.70108 16.2829 6.21962 16.2829H7.15869C7.67723 16.2829 8.09776 15.762 8.09776 15.1198V9.88602H12.3236C12.8421 9.88602 13.2626 9.36519 13.2626 8.72296V7.5599C13.2626 6.91767 12.8421 6.39684 12.3236 6.39684Z"
-                fill="#EEEEEE"
-              />
-            </svg>
-            <b>Ajouter</b>
-          </button>
-        </form>
+
+          <form className="formprod" onSubmit={handleSubmit}>
+            <input
+              className="in"
+              type="text"
+              name="productName"
+              placeholder="Nom"
+              value={newProduct.productName || ""}
+              onChange={handleChange}
+            />
+            <input
+              className="in"
+              type="text"
+              name="productPrice"
+              placeholder="Prix"
+              value={newProduct.productPrice || ""}
+              onChange={handleChange}
+            />
+            <input
+              className="in"
+              type="text"
+              name="productDescription"
+              placeholder="Description"
+              value={newProduct.productDescription || ""}
+              onChange={handleChange}
+            />
+            <input
+              className="in"
+              type="text"
+              name="productStock"
+              placeholder="Stock"
+              value={newProduct.productStock || ""}
+              onChange={handleChange}
+            />
+            <input
+              className="in"
+              type="text"
+              name="productSource"
+              placeholder="Source"
+              value={newProduct.productSource || ""}
+              onChange={handleChange}
+            />
+            <input
+              className="in"
+              type="text"
+              name="productCatégorie"
+              placeholder="Catégorie"
+              value={newProduct.productCatégorie || ""}
+              onChange={handleChange}
+            />
+            <button className="btnajout" type="submit">
+              <svg
+                width="14"
+                height="17"
+                viewBox="0 0 14 17"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.3236 6.39684H8.09776V1.16306C8.09776 0.520833 7.67723 0 7.15869 0H6.21962C5.70108 0 5.28055 0.520833 5.28055 1.16306V6.39684H1.05473C0.536189 6.39684 0.115662 6.91767 0.115662 7.5599V8.72296C0.115662 9.36519 0.536189 9.88602 1.05473 9.88602H5.28055V15.1198C5.28055 15.762 5.70108 16.2829 6.21962 16.2829H7.15869C7.67723 16.2829 8.09776 15.762 8.09776 15.1198V9.88602H12.3236C12.8421 9.88602 13.2626 9.36519 13.2626 8.72296V7.5599C13.2626 6.91767 12.8421 6.39684 12.3236 6.39684Z"
+                  fill="#EEEEEE"
+                />
+              </svg>
+              <b>Ajouter</b>
+            </button>
+          </form>
           <table className="tableproduct">
-            <thead><tr>
-              <th>Nom</th>
-              <th>Prix</th>
-              <th>Description</th>
-              <th>Stock</th>
-              <th>Source</th>
-              <th>Catégorie</th>
-              <th>Action</th>
-            </tr></thead>
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Description</th>
+                <th>Stock</th>
+                <th>Source</th>
+                <th>Catégorie</th>
+                <th>Action</th>
+              </tr>
+            </thead>
             <tbody>
-            {productList.map((product, index) => (
-            <tr key={index}>
-              <td>{product.productName}</td>
-              <td>{product.productPrice}</td>
-              <td>{product.productDescription}</td>
-              <td>{product.productStock}</td>
-              <td>{product.productSource}</td>
-              <td>{product.productCatégorie}</td> 
-            </tr>
-          ))}
+              {productList.map((product, index) => (
+                <tr key={index}>
+                  <td>{product.productName}</td>
+                  <td>{product.productPrice}</td>
+                  <td>{product.productDescription}</td>
+                  <td>{product.productStock}</td>
+                  <td>{product.productSource}</td>
+                  <td>{product.productCatégorie}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>{" "}
