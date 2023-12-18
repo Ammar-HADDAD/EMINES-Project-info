@@ -1,17 +1,69 @@
+import ModalOper from "./ModalOper";
+import React, { useState } from "react";
+
 function Operation(){
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const [operList, setOperList] = useState([]);
+  const [newOper, setNewOper] = useState({});
+ 
+  const handleSubmit = (e) => {
+     e.preventDefault();
+     setOperList([...operList, newOper]);
+     setNewOper({});
+  };
+ 
+  const handleChange = (e) => {
+     setNewOper({ ...newOper, [e.target.name]: e.target.value });
+  };
+
     return(
 <div className='Stock'>
                 
                 <div className="boxx">    
           <div className="rectangle" >
             <div className='title'><b>Ensemble des opérations</b></div>
-            <button className='btnajout'>
+
+            <form className="formnomen" onSubmit={handleSubmit}>
+        <input
+          className="in"
+          type="text"
+          name="OperName"
+          placeholder="Nom"
+          value={newOper.OperName || ''}
+          onChange={handleChange}
+        />
+        <input
+          className="in"
+          type="text"
+          name="OperProd"
+          placeholder="Produit"
+          value={newOper.OperProd || ''}
+          onChange={handleChange}
+        />
+        <input
+          className="in"
+          type="text"
+          name="OperQuant"
+          placeholder="Quantité"
+          value={newOper.OperName || ''}
+          onChange={handleChange}
+        />
+        <input
+          className="in"
+          type="text"
+          name="OperDure"
+          placeholder="Durée"
+          value={newOper.OperDur || ''}
+          onChange={handleChange}
+        />
+            <button className='btnajout' type="submit">
             <svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12.3236 6.39684H8.09776V1.16306C8.09776 0.520833 7.67723 0 7.15869 0H6.21962C5.70108 0 5.28055 0.520833 5.28055 1.16306V6.39684H1.05473C0.536189 6.39684 0.115662 6.91767 0.115662 7.5599V8.72296C0.115662 9.36519 0.536189 9.88602 1.05473 9.88602H5.28055V15.1198C5.28055 15.762 5.70108 16.2829 6.21962 16.2829H7.15869C7.67723 16.2829 8.09776 15.762 8.09776 15.1198V9.88602H12.3236C12.8421 9.88602 13.2626 9.36519 13.2626 8.72296V7.5599C13.2626 6.91767 12.8421 6.39684 12.3236 6.39684Z" fill="#EEEEEE"/>
     </svg>
-    <b>Ajouter</b></button>
+    <b>Ajouter</b></button></form>
     
-    <button className='btnimport'>
+    <button className='btnimport' onClick={() => {setModalOpen(true);}}>
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#clip0_32_461)">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M4 1.39683V14.6032C4 15.3746 4.61561 16 5.375 16H14.625C15.3844 16 16 15.3746 16 14.6032V3.67563C16 3.30251 15.8531 2.9449 15.5919 2.68251L13.3239 0.403706C13.0665 0.145065 12.7191 0 12.357 0H5.375C4.61561 0 4 0.62538 4 1.39683ZM4.875 14.6032V1.39683C4.875 1.1163 5.09886 0.888889 5.375 0.888889H12.1875V3.93651C12.1875 4.46249 12.6072 4.88889 13.125 4.88889H15.125V14.6032C15.125 14.8837 14.9011 15.1111 14.625 15.1111H5.375C5.09886 15.1111 4.875 14.8837 4.875 14.6032ZM15.125 4V3.67563C15.125 3.53995 15.0716 3.40991 14.9766 3.3145L13.0625 1.39127V3.93651C13.0625 3.97157 13.0905 4 13.125 4H15.125Z" fill="white"/>
@@ -44,16 +96,30 @@ function Operation(){
     <path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
     </svg>
     <table className='tablenomen'>
-            <tr>
+            <thead><tr>
               <th>Opération</th>
               <th>Produit</th>      
               <th>Quantité</th>
               <th>Durée</th>
               <th>Action</th>
+            </tr></thead>
+            <tbody>
+            {operList.map((operation, index) => (
+            <tr key={index}>
+              <td>{operation.OperName}</td>
+              <td>{operation.OperProd}</td>
+              <td>{operation.OperQuant}</td>
+              <td>{operation.OperDure}</td>
+              
+              
             </tr>
+            ))}
+            </tbody>
           </table>
         </div>
-    </div></div>
+    </div>
+    {modalOpen && <ModalOper setOpenModal={setModalOpen} />}
+    </div>
     )
 }
 export default Operation;

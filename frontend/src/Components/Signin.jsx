@@ -40,7 +40,7 @@ function Signin() {
   };
 
   return (
-    <>
+    <><div className="cc">
       <div className="container Ndcontainer">
         <div className="login form">
           <header>Login</header>
@@ -70,7 +70,7 @@ function Signin() {
             </span>
           </div>
         </div>
-      </div>
+      </div></div>
     </>
   );
 }

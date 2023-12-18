@@ -34,7 +34,7 @@ function Signup() {
     }));
   };
   return (
-    <>
+    <><div className="cc">
       <div className="container Ndcontainer">
         <div className="registration form">
           <header>Sign Up</header>
@@ -83,7 +83,7 @@ function Signup() {
             </span>
           </div>
         </div>
-      </div>
+      </div></div>
     </>
   );
 }
