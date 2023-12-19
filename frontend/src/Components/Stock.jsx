@@ -7,7 +7,15 @@ function Stock() {
 
   const [stockList, setStockList] = useState([]);
   const [newStock, setNewStock] = useState({});
- 
+  // État pour suivre la sélection de chaque produit
+const [selections, setSelections] = useState(stockList.map(() => false));
+
+// Fonction pour gérer le changement de la case à cocher
+const handleCheckboxChange = (index) => {
+  const nouvellesSelections = [...selections];
+  nouvellesSelections[index] = !nouvellesSelections[index];
+  setSelections(nouvellesSelections);
+};
   const handleSubmit = (e) => {
      e.preventDefault();
      setStockList([...stockList, newStock]);
@@ -187,7 +195,13 @@ function Stock() {
               <td>{stock.StockLocation}</td>
               <td>{stock.StockProduit}</td>
               <td>{stock.Stockquant}</td>
-              
+              <td className="checkbox-cell">
+              <input
+                type="checkbox"
+                checked={selections[index]}
+                onChange={() => handleCheckboxChange(index)}
+              />
+            </td>
               
             </tr>
           ))}

@@ -1,6 +1,6 @@
 
 .boxx {
-    
+    height: auto;
     width: 1200px;
     position: absolute;
     top: 100px;
@@ -10,9 +10,10 @@ background-color: #eeeeee;
 border-radius: 30px;
 min-height: 500px;
 left: 30px;
-position: absolute;
+position: relative;
 top: 0px;
 width: 1200px;
+height: auto;
 }
 
 .btnajout{
@@ -166,3 +167,54 @@ table tbody tr td{
     font-weight: 500;
 }
     
+.checkbox-cell {
+
+    position: relative;
+  }
+
+  /* Styles pour la case à cocher en forme de cercle */
+.checkbox-cell input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #B2A4A4;
+    outline: none;
+    cursor: pointer;
+    position: absolute;
+    top: 25%;
+    left: 45%;
+  }
+  
+  .checkbox-cell input[type="checkbox"]:checked::before {
+    content: '\2713'; /* Code unicode pour le symbole de coche */
+    color: #fff; /* Couleur du texte à l'intérieur du cercle */
+    font-size: 14px; /* Taille de la police du symbole de coche */
+    line-height: 5px;
+    position: absolute;
+    top: 60%;
+    left: 60%;
+    transform: translate(-60%, -50%);
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    padding: 2px; /* Espace entre le symbole et le bord du cercle */
+    border: none; /* Supprimez la bordure pour obtenir un cercle rempli */
+  }
+  /* MonTableau.css */
+  .checkbox-cell input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Code Unicode pour le symbole de coche */
+    color: #053B50; /* Couleur du texte à l'intérieur du cercle */
+    font-size: 14px; /* Taille de la police du symbole de coche */
+    line-height: 16px;
+    position: absolute;
+    top: 58%;
+    left: 65%;
+    transform: translate(-60%, -55%);
+    background-color: #B2A4A4; /* Couleur bleue pour remplir le cercle */
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    padding: 2px; /* Espace entre le symbole et le bord du cercle */
+    border: none; /* Supprimez la bordure pour obtenir un cercle rempli */
+  }

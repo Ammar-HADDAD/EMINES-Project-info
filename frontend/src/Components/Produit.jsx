@@ -8,6 +8,18 @@ function Produit() {
   const [productList, setProductList] = useState([]);
   const [newProduct, setNewProduct] = useState({});
 
+// État pour suivre la sélection de chaque produit
+const [selections, setSelections] = useState(productList.map(() => false));
+
+// Fonction pour gérer le changement de la case à cocher
+const handleCheckboxChange = (index) => {
+  const nouvellesSelections = [...selections];
+  nouvellesSelections[index] = !nouvellesSelections[index];
+  setSelections(nouvellesSelections);
+};
+
+
+
   useEffect(() => {
     // This block will execute whenever productList is updated
     const mappedArray = productList.map((item) => Object.values(item));
@@ -249,6 +261,13 @@ function Produit() {
                   <td>{product.productStock}</td>
                   <td>{product.productSource}</td>
                   <td>{product.productCatégorie}</td>
+                  <td className="checkbox-cell">
+              <input
+                type="checkbox"
+                checked={selections[index]}
+                onChange={() => handleCheckboxChange(index)}
+              />
+            </td>
                 </tr>
               ))}
             </tbody>

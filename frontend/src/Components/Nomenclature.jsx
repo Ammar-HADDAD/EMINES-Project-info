@@ -6,7 +6,16 @@ function Nomenclature() {
 
   const [nomenclatureList, setNomenclatureList] = useState([]);
   const [newNomenclature, setNewNomenclature] = useState({});
- 
+ // État pour suivre la sélection de chaque produit
+const [selections, setSelections] = useState(nomenclatureList.map(() => false));
+
+// Fonction pour gérer le changement de la case à cocher
+const handleCheckboxChange = (index) => {
+  const nouvellesSelections = [...selections];
+  nouvellesSelections[index] = !nouvellesSelections[index];
+  setSelections(nouvellesSelections);
+};
+
   const handleSubmit = (e) => {
      e.preventDefault();
      setNomenclatureList([...nomenclatureList, newNomenclature]);
@@ -208,6 +217,13 @@ function Nomenclature() {
               <td>{nomenclature.NomenclatureStock}</td>
               <td>{nomenclature.NomenclatureSource}</td>
               <td>{nomenclature.NomenclatureFournisseur}</td> 
+              <td className="checkbox-cell">
+              <input
+                type="checkbox"
+                checked={selections[index]}
+                onChange={() => handleCheckboxChange(index)}
+              />
+            </td>
             </tr>
           ))}
             </tbody>
