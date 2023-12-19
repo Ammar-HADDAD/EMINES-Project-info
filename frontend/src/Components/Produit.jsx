@@ -19,7 +19,6 @@ const handleCheckboxChange = (index) => {
 };
 
 
-
   useEffect(() => {
     // This block will execute whenever productList is updated
     const mappedArray = productList.map((item) => Object.values(item));
@@ -207,7 +206,17 @@ const handleCheckboxChange = (index) => {
               placeholder="Stock"
               value={newProduct.productStock || ""}
               onChange={handleChange}
+              list="suggestions"
             />
+            <datalist id="suggestions">
+        <option value="Stock 1" />
+        <option value="Stock 2" />
+        <option value="Stock 3" />
+      </datalist>
+      <datalist id="suggestions2">
+        <option value="Produit" />
+        <option value="Nomenclature" />
+      </datalist>
             <input
               className="in"
               type="text"
@@ -223,6 +232,7 @@ const handleCheckboxChange = (index) => {
               placeholder="Catégorie"
               value={newProduct.productCatégorie || ""}
               onChange={handleChange}
+              list="suggestions2"
             />
             <button className="btnajout" type="submit">
               <svg

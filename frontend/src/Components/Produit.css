@@ -218,3 +218,6 @@ table tbody tr td{
     padding: 2px; /* Espace entre le symbole et le bord du cercle */
     border: none; /* Supprimez la bordure pour obtenir un cercle rempli */
   }
+  .in::-webkit-calendar-picker-indicator {
+    filter: invert(70%) sepia(20%) saturate(10%) hue-rotate(190deg); /* Applique un filtre pour obtenir la couleur souhaitée */
+  }
