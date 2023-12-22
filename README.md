@@ -26,8 +26,6 @@ Avant de commencer, assurez-vous de suivre les étapes ci-dessous pour configure
 
 ## Liste des tâches à effectuer
 
-Avant de commencer le développement, assurez-vous de suivre ces étapes pour améliorer l'exactitude du projet :
-
 1. Modifiez les messages d'invite dans le code pour correspondre à la langue choisie (français ou anglais).
 
 2. Unifiez la langue utilisée dans l'ensemble du projet (français ou anglais).
