@@ -1,88 +1,143 @@
 import "./Stock.css";
-import ModalStock from "./ModalStock";
-import React, { useState } from "react";
+import Modal from "./ModalStock";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Stock() {
+  const Pr_Object = "Stock";
   const [modalOpen, setModalOpen] = useState(false);
+  const [List, setList] = useState([]);
 
-  const [stockList, setStockList] = useState([]);
-  const [newStock, setNewStock] = useState({});
-  // État pour suivre la sélection de chaque produit
-const [selections, setSelections] = useState(stockList.map(() => false));
+  const [menuOptions, setmenuOptions] = useState([]);
+  const [newElement, setNewElement] = useState({
+    Nom: "",
+    Location: "",
+  });
 
-// Fonction pour gérer le changement de la case à cocher
-const handleCheckboxChange = (index) => {
-  const nouvellesSelections = [...selections];
-  nouvellesSelections[index] = !nouvellesSelections[index];
-  setSelections(nouvellesSelections);
-};
+  // New state to manage selected checkboxes
+  const [selected, setSelected] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+
+  useEffect(() => {
+    // Fetch data from the API when the component is mounted
+    axios
+      .get("http://localhost:8001/get_stock")
+      .then((response) => {
+        // Update the product list with the fetched data
+        setList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the backend:", error);
+      });
+  }, []); // Empty dependency array ensures that this effect runs only once after the initial render
+
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const filtered = List.filter(
+    (element) =>
+      element.Nom.toLowerCase().includes(searchInput.toLowerCase()) ||
+      element.Location.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   const handleSubmit = (e) => {
-     e.preventDefault();
-     setStockList([...stockList, newStock]);
-     setNewStock({});
-  };
- 
-  const handleChange = (e) => {
-     setNewStock({ ...newStock, [e.target.name]: e.target.value });
+    e.preventDefault();
+
+    // Check if any of the input fields are empty
+    const requiredFields = ["Nom", "Location"];
+    const isEmptyField = requiredFields.some(
+      (field) => newElement[field] === ""
+    );
+
+    if (isEmptyField) {
+      alert("Please fill in all the required fields");
+      return;
+    }
+
+    // Continue with the existing validation code
+
+    const mappedArray = Object.values(newElement);
+
+    axios
+      .post("http://localhost:8001/insert_stock", [mappedArray])
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.inserted === 0) {
+          alert("Produit existe deja");
+        } else {
+          // Refresh the product list after inserting a new product
+          axios.get("http://localhost:8001/get_stock").then((response) => {
+            setList(response.data);
+          });
+
+          // Clear the form
+          setNewElement({
+            Nom: "",
+            Location: "",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error inserting data into the backend:", error);
+      });
   };
 
+  const handleChange = (e) => {
+    setNewElement({ ...newElement, [e.target.name]: e.target.value });
+  };
+
+  const handleDelete = () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete the selected products?"
+    );
+
+    if (isConfirmed) {
+      axios
+        .post("http://localhost:8001/delete_stock", selected)
+        .then((response) => {
+          if (response.data === "Success") {
+            const updatedList = List.filter(
+              (element) => !selected.includes(element.stock_id)
+            );
+
+            setList(updatedList);
+          } else {
+            console.log("Error");
+          }
+        });
+
+      // Clear the selected products state
+      setSelected([]);
+    }
+  };
+
+  // New function to handle checkbox changes
+  const handleCheckboxChange = (elementId) => {
+    if (selected.includes(elementId)) {
+      // If the product is already selected, remove it
+      setSelected((prevSelected) =>
+        prevSelected.filter((id) => id !== elementId)
+      );
+    } else {
+      // If the product is not selected, add it
+      setSelected((prevSelected) => [...prevSelected, elementId]);
+    }
+  };
   return (
-    <div className="Stock">
+    <div className="Produits">
       <div className="boxx">
         <div className="rectangle">
           <div className="title">
-            <b>Contenu des stocks</b>
+            <b>Catalogue des {Pr_Object.toLowerCase()}</b>
           </div>
-          <form className="formnomen" onSubmit={handleSubmit}>
-        <input
-          className="in"
-          type="text"
-          name="StockName"
-          placeholder="Nom"
-          value={newStock.StockName || ''}
-          onChange={handleChange}
-        />
-        <input
-          className="in"
-          type="text"
-          name="StockLocation"
-          placeholder="Location"
-          value={newStock.StockLocation || ''}
-          onChange={handleChange}
-        />
-        <input
-          className="in"
-          type="text"
-          name="StockProduit"
-          placeholder="Produit"
-          value={newStock.StockProduit || ''}
-          onChange={handleChange}
-        />
-        <input
-          className="in"
-          type="text"
-          name="Stockquant"
-          placeholder="Quantité"
-          value={newStock.Stockquant || ''}
-          onChange={handleChange}
-        />
-          <button className="btnajout" type="submit">
-            <svg
-              width="14"
-              height="17"
-              viewBox="0 0 14 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.3236 6.39684H8.09776V1.16306C8.09776 0.520833 7.67723 0 7.15869 0H6.21962C5.70108 0 5.28055 0.520833 5.28055 1.16306V6.39684H1.05473C0.536189 6.39684 0.115662 6.91767 0.115662 7.5599V8.72296C0.115662 9.36519 0.536189 9.88602 1.05473 9.88602H5.28055V15.1198C5.28055 15.762 5.70108 16.2829 6.21962 16.2829H7.15869C7.67723 16.2829 8.09776 15.762 8.09776 15.1198V9.88602H12.3236C12.8421 9.88602 13.2626 9.36519 13.2626 8.72296V7.5599C13.2626 6.91767 12.8421 6.39684 12.3236 6.39684Z"
-                fill="#EEEEEE"
-              />
-            </svg>
-            <b>Ajouter</b>
-          </button></form>
 
-          <button className="btnimport" onClick={() => {setModalOpen(true);}}>
+          <button
+            className="btnimport"
+            onClick={() => {
+              setModalOpen(true);
+            }}
+          >
             <svg
               width="16"
               height="16"
@@ -133,8 +188,7 @@ const handleCheckboxChange = (index) => {
 
             <b>Importer</b>
           </button>
-
-          <button className="btnmodif">
+          {/* <button className="btnmodif">
             <svg
               width="21"
               height="24"
@@ -149,8 +203,8 @@ const handleCheckboxChange = (index) => {
                 fill="#EEEEEE"
               />
             </svg>
-          </button>
-          <button className="btnsupprimer">
+          </button> */}
+          <button className="btnsupprimer" onClick={handleDelete}>
             <svg
               width="17"
               height="16"
@@ -168,47 +222,73 @@ const handleCheckboxChange = (index) => {
             className="searchproduct"
             type="text"
             placeholder="Chercher.."
+            value={searchInput}
+            onChange={handleSearchChange}
           ></input>
-          <svg
-            className="searchicon1"
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            width="18"
-            height="18"
-            viewBox="0 0 50 50"
-          >
-            <path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
-          </svg>
-          <table className="tablenomen">
-            <thead><tr>
-              <th>Nom</th>
-              <th>Location</th>
-              <th>Produit</th>
-              <th>Quantité</th>
-              <th>Action</th>
-            </tr></thead>
+
+          <form className="formprod" onSubmit={handleSubmit}>
+            <input
+              className="in"
+              type="text"
+              name="Nom"
+              placeholder="Nom"
+              value={newElement.Nom || ""}
+              onChange={handleChange}
+            />
+            <input
+              className="in"
+              type="text"
+              name="Location"
+              placeholder="Location"
+              value={newElement.Location || ""}
+              onChange={handleChange}
+            />
+
+            <button className="btnajout" type="submit">
+              <svg
+                width="14"
+                height="17"
+                viewBox="0 0 14 17"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.3236 6.39684H8.09776V1.16306C8.09776 0.520833 7.67723 0 7.15869 0H6.21962C5.70108 0 5.28055 0.520833 5.28055 1.16306V6.39684H1.05473C0.536189 6.39684 0.115662 6.91767 0.115662 7.5599V8.72296C0.115662 9.36519 0.536189 9.88602 1.05473 9.88602H5.28055V15.1198C5.28055 15.762 5.70108 16.2829 6.21962 16.2829H7.15869C7.67723 16.2829 8.09776 15.762 8.09776 15.1198V9.88602H12.3236C12.8421 9.88602 13.2626 9.36519 13.2626 8.72296V7.5599C13.2626 6.91767 12.8421 6.39684 12.3236 6.39684Z"
+                  fill="#EEEEEE"
+                />
+              </svg>
+              <b>Ajouter</b>
+            </button>
+          </form>
+
+          <table className="tableproduct">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Location</th>
+
+                <th>Action</th>
+              </tr>
+            </thead>
             <tbody>
-            {stockList.map((stock, index) => (
-            <tr key={index}>
-              <td>{stock.StockName}</td>
-              <td>{stock.StockLocation}</td>
-              <td>{stock.StockProduit}</td>
-              <td>{stock.Stockquant}</td>
-              <td className="checkbox-cell">
-              <input
-                type="checkbox"
-                checked={selections[index]}
-                onChange={() => handleCheckboxChange(index)}
-              />
-            </td>
-              
-            </tr>
-          ))}
+              {filtered.map((element) => (
+                <tr key={element.stock_id}>
+                  <td>{element.Nom}</td>
+                  <td>{element.Location}</td>
+                  <td className="checkbox-cell">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(element.stock_id)}
+                      onChange={() => handleCheckboxChange(element.stock_id)}
+                    />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
-        </div>
-      </div>{modalOpen && <ModalStock setOpenModal={setModalOpen} />}
+        </div>{" "}
+      </div>{" "}
+      {modalOpen && <Modal setOpenModal={setModalOpen} />}
     </div>
   );
 }

@@ -10,8 +10,6 @@ function Modal({ setOpenModal }) {
   const [typeError, setTypeError] = useState(null);
   const [excelData, setExcelData] = useState(null);
 
-
-
   const handleFile = (e) => {
     let fileTypes = [
       "application/vnd.ms-excel",
@@ -34,7 +32,6 @@ function Modal({ setOpenModal }) {
     } else {
       console.log("Please select your file");
     }
-
   };
 
   const handleFileSubmit = (e) => {
@@ -47,15 +44,17 @@ function Modal({ setOpenModal }) {
       setExcelData(data);
 
       if (data !== null) {
-        const mappedArray = data.map(item => Object.values(item));
+        const mappedArray = data.map((item) => Object.values(item));
         axios
           .post("http://localhost:8001/insert_products", mappedArray)
-          .then((res) => console.log(res.data))
+          .then((res) => {
+            console.log(res.data);
+            setOpenModal(false);
+          })
           .catch((err) => console.log(err));
       }
     }
   };
-
 
   const handleClickFileInput = () => {
     fileInputRef.current.click();

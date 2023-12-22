@@ -1,223 +1,201 @@
-
 .boxx {
-    height: auto;
-    width: 1200px;
-    position: absolute;
-    top: 100px;
-    }
+  width: 1200px;
+  position: absolute;
+  top: 100px;
+}
 .boxx .rectangle {
-background-color: #eeeeee;
-border-radius: 30px;
-min-height: 500px;
-left: 30px;
-position: relative;
-top: 0px;
-width: 1200px;
-height: auto;
+  background-color: #eeeeee;
+  border-radius: 30px;
+  min-height: 500px;
+  overflow-y: auto;
+  left: 30px;
+  position: absolute;
+  top: 0px;
+  width: 1200px;
 }
 
-.btnajout{
-    background-color: #64CCC5;
-  color: #eeeeee; 
-  border: none; 
+.btnajout {
+  background-color: #64ccc5;
+  color: #eeeeee;
+  border: none;
   width: 85px;
   height: 30px;
-  border-radius: 10px; 
+  border-radius: 10px;
   font-weight: 600;
   font-size: 15px;
   position: absolute;
-    top: 50px;
-    left: 30px;  
-    text-align: end;
-    line-height: 10px;
+  top: 50px;
+  left: 30px;
+  text-align: end;
+  line-height: 10px;
 }
-.btnajout:focus{
-    outline-color:#64CCC5;
+.btnajout:focus {
+  outline-color: #64ccc5;
 }
-.btnajout svg{
-    
-    position: absolute;
-    top: 8px;
-    left: 3px;
+.btnajout svg {
+  position: absolute;
+  top: 8px;
+  left: 3px;
 }
 
-.btnimport{
-    background-color: #64CCC5;
-  color: #eeeeee; 
-  border: none; 
+.btnimport {
+  background-color: #64ccc5;
+  color: #eeeeee;
+  border: none;
   width: 85px;
   height: 30px;
-  border-radius: 10px; 
+  border-radius: 10px;
   font-weight: 500;
   font-size: 14px;
   position: absolute;
-    top: 50px;
-    left: 120px;  
-    text-align: end;
-    line-height: 5px;
+  top: 50px;
+  left: 120px;
+  text-align: end;
+  line-height: 5px;
 }
-.btnimport:focus{
-    outline-color:#64CCC5;
+.btnimport:focus {
+  outline-color: #64ccc5;
 }
-.btnimport svg{
-    
-    position: absolute;
-    top: 6px;
-    left: 3px;
+.btnimport svg {
+  position: absolute;
+  top: 6px;
+  left: 0px;
 }
 
-.btnmodif{
-    background-color: #B2A4A4;
-    border: none; 
+.btnsupprimer {
+  background-color: #b2a4a4;
+  border: none;
   width: 30px;
   height: 30px;
   position: absolute;
-    top: 50px;
-    left: 209px;
+  top: 50px;
+  left: 209px;
 }
 
-.btnmodif svg{
-    
-    position: absolute;
-    top: 2px;
-    left: 10px;
-}
-
-.btnsupprimer{
-    background-color: #B2A4A4;
-    border: none; 
-  width: 30px;
-  height: 30px;
+.btnsupprimer svg {
   position: absolute;
-    top: 50px;
-    left: 252px;
+  top: 6px;
+  left: 10px;
 }
-.btnsupprimer svg{
-    
-    position: absolute;
-    top: 6px;
-    left: 11px;
+
+.btnsupprimer:focus,
+.searchproduct:focus {
+  outline-color: #b2a4a4;
 }
-.btnmodif:focus, .btnsupprimer:focus, .searchproduct:focus{
-    outline-color:#B2A4A4;
-}
-.searchproduct{
-    width: 150px;
-  height: 18px; 
-  font-size: 15px; 
-  padding: 8px; 
-  border: 1px solid #B2A4A4; 
-  border-radius: 19px; 
-  background-color: #D9D9D9; 
+.searchproduct {
+  width: 150px;
+  height: 18px;
+  font-size: 15px;
+  padding: 8px;
+  border: 1px solid #b2a4a4;
+  border-radius: 19px;
+  background-color: #d9d9d9;
   position: absolute;
   top: 45px;
   left: 900px;
 }
-.searchproduct::placeholder{
-    color: #B2A4A4;
+.searchproduct::placeholder {
+  color: #b2a4a4;
 }
-.searchicon1{
-    fill: #B2A4A4;
-    position:absolute;
-    top:45px;
-    left: 1030px;
-}
-
-.tableproduct{
-    width: 1100px;
-    height: 50px;
-    position: absolute;
-    top: 150px;
-    left: 50px;
-}
-.tableproduct tr{
-    background-color: #d9d9d9;
-    height: 50px;
-}
-.tableproduct thead tr th{
-    color: #176B87;
-    font-size: 15px;
-    font-weight: 500;
+.searchicon1 {
+  fill: #b2a4a4;
+  position: absolute;
+  top: 45px;
+  left: 1030px;
 }
 
-.in{
-    position: relative;
-    top: 100px;
-   left:50px;
-   width: 100%;
-  height: 30px; 
-  font-size: 15px; 
-  padding: 0px; 
-  border: 1px solid #B2A4A4; 
-  border-radius: 1px; 
-  background-color: #D9D9D9; 
-  
- 
+.tableproduct {
+  width: 1100px;
+  height: 50px;
+  position: absolute;
+  top: 150px;
+  left: 50px;
 }
-.in::placeholder{
-    color: #B2A4A4;
+.tableproduct tr {
+  background-color: #d9d9d9;
+  height: 50px;
 }
-.in:focus{
-    outline-color:#B2A4A4;
+.tableproduct thead tr th {
+  color: #176b87;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-table tbody tr td{
-    color: #053B50;
-    font-size: 15px;
-    font-weight: 500;
+.in {
+  position: relative;
+  top: 100px;
+  left: 50px;
+  width: 15%;
+  height: 30px;
+  font-size: 15px;
+  padding: 0px;
+  border: 1px solid #b2a4a4;
+  border-radius: 1px;
+  background-color: #d9d9d9;
 }
-    
+.in::placeholder {
+  color: #b2a4a4;
+}
+.in:focus {
+  outline-color: #b2a4a4;
+}
+
+table tbody tr td {
+  color: #053b50;
+  font-size: 15px;
+  font-weight: 500;
+}
+
 .checkbox-cell {
+  position: relative;
+}
 
-    position: relative;
-  }
-
-  /* Styles pour la case à cocher en forme de cercle */
+/* Styles pour la case à cocher en forme de cercle */
 .checkbox-cell input[type="checkbox"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid #B2A4A4;
-    outline: none;
-    cursor: pointer;
-    position: absolute;
-    top: 25%;
-    left: 45%;
-  }
-  
-  .checkbox-cell input[type="checkbox"]:checked::before {
-    content: '\2713'; /* Code unicode pour le symbole de coche */
-    color: #fff; /* Couleur du texte à l'intérieur du cercle */
-    font-size: 14px; /* Taille de la police du symbole de coche */
-    line-height: 5px;
-    position: absolute;
-    top: 60%;
-    left: 60%;
-    transform: translate(-60%, -50%);
-    border-radius: 50%;
-    width: 15px;
-    height: 15px;
-    padding: 2px; /* Espace entre le symbole et le bord du cercle */
-    border: none; /* Supprimez la bordure pour obtenir un cercle rempli */
-  }
-  /* MonTableau.css */
-  .checkbox-cell input[type="checkbox"]:checked::after {
-    content: '\2713'; /* Code Unicode pour le symbole de coche */
-    color: #053B50; /* Couleur du texte à l'intérieur du cercle */
-    font-size: 14px; /* Taille de la police du symbole de coche */
-    line-height: 16px;
-    position: absolute;
-    top: 58%;
-    left: 65%;
-    transform: translate(-60%, -55%);
-    background-color: #B2A4A4; /* Couleur bleue pour remplir le cercle */
-    border-radius: 50%;
-    width: 15px;
-    height: 15px;
-    padding: 2px; /* Espace entre le symbole et le bord du cercle */
-    border: none; /* Supprimez la bordure pour obtenir un cercle rempli */
-  }
-  .in::-webkit-calendar-picker-indicator {
-    filter: invert(70%) sepia(20%) saturate(10%) hue-rotate(190deg); /* Applique un filtre pour obtenir la couleur souhaitée */
-  }
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #b2a4a4;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  top: 25%;
+  left: 45%;
+}
+
+.checkbox-cell input[type="checkbox"]:checked::before {
+  content: "\2713"; /* Code unicode pour le symbole de coche */
+  color: #fff; /* Couleur du texte à l'intérieur du cercle */
+  font-size: 14px; /* Taille de la police du symbole de coche */
+  line-height: 5px;
+  position: absolute;
+  top: 60%;
+  left: 60%;
+  transform: translate(-60%, -50%);
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  padding: 2px; /* Espace entre le symbole et le bord du cercle */
+  border: none; /* Supprimez la bordure pour obtenir un cercle rempli */
+}
+/* MonTableau.css */
+.checkbox-cell input[type="checkbox"]:checked::after {
+  content: "\2713"; /* Code Unicode pour le symbole de coche */
+  color: #053b50; /* Couleur du texte à l'intérieur du cercle */
+  font-size: 14px; /* Taille de la police du symbole de coche */
+  line-height: 16px;
+  position: absolute;
+  top: 58%;
+  left: 65%;
+  transform: translate(-60%, -55%);
+  background-color: #b2a4a4; /* Couleur bleue pour remplir le cercle */
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  padding: 2px; /* Espace entre le symbole et le bord du cercle */
+  border: none; /* Supprimez la bordure pour obtenir un cercle rempli */
+}
+.in::-webkit-calendar-picker-indicator {
+  filter: invert(70%) sepia(20%) saturate(10%) hue-rotate(190deg); /* Applique un filtre pour obtenir la couleur souhaitée */
+}

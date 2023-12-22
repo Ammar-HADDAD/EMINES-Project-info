@@ -10,8 +10,6 @@ function ModalOper({ setOpenModal }) {
   const [typeError, setTypeError] = useState(null);
   const [excelData, setExcelData] = useState(null);
 
-
-
   const handleFile = (e) => {
     let fileTypes = [
       "application/vnd.ms-excel",
@@ -34,10 +32,10 @@ function ModalOper({ setOpenModal }) {
     } else {
       console.log("Please select your file");
     }
-
   };
-
   const handleFileSubmit = (e) => {
+    let inserted = 0;
+    let skipped = 0;
     e.preventDefault();
     if (excelFile !== null) {
       const workbook = XLSX.read(excelFile, { type: "array" });
@@ -47,15 +45,36 @@ function ModalOper({ setOpenModal }) {
       setExcelData(data);
 
       if (data !== null) {
-        const mappedArray = data.map(item => Object.values(item));
-        axios
-          .post("http://localhost:8001/insert_oper", mappedArray)
-          .then((res) => console.log(res.data))
+        const mappedArray = data.map((item) => Object.values(item));
+        const axiosRequests = [];
+
+        mappedArray.forEach((element) => {
+          const axiosRequest = axios
+            .post("http://localhost:8001/check_oper", [element[0]])
+            .then((res) => {
+              if (res.data.exists) {
+                skipped += 1;
+              } else {
+                inserted += 1;
+                return axios.post("http://localhost:8001/insert_oper", element);
+              }
+            })
+            .catch((err) => console.log(err));
+
+          axiosRequests.push(axiosRequest);
+        });
+
+        Promise.all(axiosRequests)
+          .then(() => {
+            console.log(inserted, skipped);
+            alert(
+              `${inserted} inserted avec succes, ${skipped} already exists`
+            );
+          })
           .catch((err) => console.log(err));
       }
     }
   };
-
 
   const handleClickFileInput = () => {
     fileInputRef.current.click();
@@ -72,20 +91,23 @@ function ModalOper({ setOpenModal }) {
             X
           </button>
         </div>
-       
+
         <div className="body">
-        
-        <p> Votre fichier CSV doit être représenté comme suit pour assurer un import réussi :<br />
-        Colonne A : Opération
-        <br />
-        Colonne B : Produit
-        <br />
-        Colonne C : Quantité
-        <br />
-        Colonne D : Durée
-        
-        <br/>
-        Assurez-vous de commencer à la ligne 1.</p>
+          <p>
+            {" "}
+            Votre fichier CSV doit être représenté comme suit pour assurer un
+            import réussi :<br />
+            <strong>Colonne A :</strong> Nom de l'opération
+            <br />
+            <strong>Colonne B :</strong> Durée
+            <br />
+            <strong>
+              Si l'opération est un assemblage de produit final, veuillez
+              l'écrire sous la forme suivante : Assemblage_NomDuProduiFinal
+            </strong>
+            <br />
+            Assurez-vous de commencer à la ligne 1.
+          </p>
         </div>
         <div className="footer">
           <button

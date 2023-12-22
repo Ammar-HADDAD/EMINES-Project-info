@@ -10,8 +10,6 @@ function ModalStock({ setOpenModal }) {
   const [typeError, setTypeError] = useState(null);
   const [excelData, setExcelData] = useState(null);
 
-
-
   const handleFile = (e) => {
     let fileTypes = [
       "application/vnd.ms-excel",
@@ -34,7 +32,6 @@ function ModalStock({ setOpenModal }) {
     } else {
       console.log("Please select your file");
     }
-
   };
 
   const handleFileSubmit = (e) => {
@@ -47,15 +44,20 @@ function ModalStock({ setOpenModal }) {
       setExcelData(data);
 
       if (data !== null) {
-        const mappedArray = data.map(item => Object.values(item));
+        const mappedArray = data.map((item) => Object.values(item));
+        console.log(mappedArray);
         axios
           .post("http://localhost:8001/insert_stock", mappedArray)
-          .then((res) => console.log(res.data))
+          .then((res) => {
+            const status_ = res.data;
+            alert(
+              `${status_.inserted} inséré , ${status_.skipped} existe déja`
+            );
+          })
           .catch((err) => console.log(err));
       }
     }
   };
-
 
   const handleClickFileInput = () => {
     fileInputRef.current.click();
@@ -72,20 +74,18 @@ function ModalStock({ setOpenModal }) {
             X
           </button>
         </div>
-       
+
         <div className="body">
-        
-        <p> Votre fichier CSV doit être représenté comme suit pour assurer un import réussi :<br />
-        Colonne A : Nom
-        <br />
-        Colonne B : Location
-        <br />
-        Colonne C : Produit
-        <br />
-        Colonne D : Quantité
-        
-        <br/>
-        Assurez-vous de commencer à la ligne 1.</p>
+          <p>
+            {" "}
+            Votre fichier CSV doit être représenté comme suit pour assurer un
+            import réussi :<br />
+            <strong>Colonne A :</strong> Nom
+            <br />
+            <strong>Colonne B :</strong> Location
+            <br />
+            Assurez-vous de commencer à la ligne 1.
+          </p>
         </div>
         <div className="footer">
           <button

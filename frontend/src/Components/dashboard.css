@@ -89,7 +89,16 @@ position: absolute;
 top: 0px;
 width: 510px;
 }
-
+.box2 .rectangle2 .graphebar{
+    position:relative;
+    top:70px;
+}
+.graphecourbe{
+    width:400px;
+    position: relative;
+    top: 60px;
+    left: 250px;
+}
 .title2{
     font-weight: 800;
     font-size: 15px;

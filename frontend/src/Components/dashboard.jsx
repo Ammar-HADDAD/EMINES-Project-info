@@ -1,5 +1,7 @@
 import "./dashboard.css";
-
+import GrapheBar from "./GrapheBar";
+import GrapheCourbe from "./GrapheCourbe";
+import axios from "axios";
 function Dashboard() {
   return (
     <div className="dashboard">
@@ -12,6 +14,9 @@ function Dashboard() {
           <div className="revenu">5000 MAD</div>
           <div className="subtitle1">Revenu du mois présent</div>
           <div className="subtitle2">Ventes du mois présent</div>
+          <div className="graphecourbe">
+            <GrapheCourbe />
+          </div>
           <div className="sales">100</div>
           <div className="titlegraphe">
             <b>Les ventes de cette semaine</b>
@@ -22,6 +27,9 @@ function Dashboard() {
         <div className="rectangle2">
           <div className="title2">
             <b>Quantité des produits par stock</b>
+          </div>
+          <div className="graphebar">
+            <GrapheBar />
           </div>
         </div>
       </div>

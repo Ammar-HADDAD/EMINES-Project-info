@@ -4,130 +4,180 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function Produit() {
+  const Pr_Object = "Produits";
   const [modalOpen, setModalOpen] = useState(false);
-  const [productList, setProductList] = useState([]);
-  const [newProduct, setNewProduct] = useState({});
+  const [List, setList] = useState([]);
 
-// État pour suivre la sélection de chaque produit
-const [selections, setSelections] = useState(productList.map(() => false));
+  const [menuOptions, setmenuOptions] = useState([]);
+  const [newElement, setNewElement] = useState({
+    Name: "",
+    Price: "",
+    Description: "",
+    Stock: "",
+    Quantite: "",
+    Category: "",
+  });
 
-// Fonction pour gérer le changement de la case à cocher
-const handleCheckboxChange = (index) => {
-  const nouvellesSelections = [...selections];
-  nouvellesSelections[index] = !nouvellesSelections[index];
-  setSelections(nouvellesSelections);
-};
-
+  // New state to manage selected checkboxes
+  const [selected, setSelected] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
-    // This block will execute whenever productList is updated
-    const mappedArray = productList.map((item) => Object.values(item));
-
+    // Fetch data from the API when the component is mounted
     axios
-      .post("http://localhost:8001/insert_products", mappedArray)
-      .then((res) => console.log(res.data))
-      .catch((error) =>
-        console.error("Error sending data to the backend:", error)
-      );
+      .get("http://localhost:8001/get_products")
+      .then((response) => {
+        // Update the product list with the fetched data
+        setList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the backend:", error);
+      });
 
-    console.log("Mapped Array:", mappedArray);
+    // Fetch stock options from the API
+    axios
+      .get("http://localhost:8001/get_stocks_menu")
+      .then((response) => {
+        // Update the stock options state with the fetched data
+        setmenuOptions(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching source options from the backend:", error);
+      });
+  }, []); // Empty dependency array ensures that this effect runs only once after the initial render
 
-    // You can place your axios.post call here if you want it to execute after productList is updated
-  }, [productList]);
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const filtered = List.filter(
+    (element) =>
+      element.Nom.toLowerCase().includes(searchInput.toLowerCase()) ||
+      element.Description.toLowerCase().includes(searchInput.toLowerCase()) ||
+      element.Categorie.toLowerCase().includes(searchInput.toLowerCase()) ||
+      element.Prix.toString()
+        .toLowerCase()
+        .includes(searchInput.toLowerCase()) ||
+      element.Stock.toString().toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate inputs before adding to the table
-    if (
-      !newProduct.productName ||
-      !newProduct.productPrice ||
-      !newProduct.productDescription ||
-      !newProduct.productStock ||
-      !newProduct.productSource ||
-      !newProduct.productCatégorie
-    ) {
-      // Display an error message or handle the validation failure appropriately
-      alert("Please fill in all fields");
+    // Check if any of the input fields are empty
+    const requiredFields = [
+      "Name",
+      "Price",
+      "Description",
+      "Quantite",
+      "Category",
+      "Stock",
+    ];
+    const isEmptyField = requiredFields.some(
+      (field) => newElement[field] === ""
+    );
+
+    if (isEmptyField) {
+      alert("Please fill in all the required fields");
       return;
     }
-    // Update the product list
-    setProductList((prevProductList) => [...prevProductList, newProduct]);
 
-    // Clear the form
-    setNewProduct({});
+    // Continue with the existing validation code
+
+    const mappedArray = Object.values(newElement);
+    console.log(mappedArray);
+
+    axios
+      .post("http://localhost:8001/check_produit", [
+        mappedArray[0],
+        mappedArray[mappedArray.length - 1],
+      ])
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.exists) {
+          alert("Produit existe déja!");
+        } else {
+          axios
+            .post("http://localhost:8001/insert_products", mappedArray)
+            .then((response) => {
+              // Refresh the product list after inserting a new product
+              axios
+                .get("http://localhost:8001/get_products")
+                .then((response) => {
+                  setList(response.data);
+                });
+
+              // Clear the form
+              setNewElement({
+                Name: "",
+                Price: "",
+                Description: "",
+                Stock: "",
+                Quantite: "",
+                Category: "",
+              });
+              alert("Produit inséré avec succes!");
+            })
+            .catch((error) => {
+              console.error("Error inserting data into the backend:", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error("Error checking if data exists", error);
+      });
   };
 
   const handleChange = (e) => {
-    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+    setNewElement({ ...newElement, [e.target.name]: e.target.value });
   };
 
+  const handleDelete = () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete the selected products?"
+    );
+
+    if (isConfirmed) {
+      axios
+        .post("http://localhost:8001/delete_products", selected)
+        .then((response) => {
+          if (response.data === "Success") {
+            const updatedList = List.filter(
+              (element) => !selected.includes(element.produit_id)
+            );
+
+            setList(updatedList);
+          } else {
+            console.log("Error");
+          }
+        });
+
+      // Clear the selected products state
+      setSelected([]);
+    }
+  };
+
+  // New function to handle checkbox changes
+  const handleCheckboxChange = (elementId) => {
+    if (selected.includes(elementId)) {
+      // If the product is already selected, remove it
+      setSelected((prevSelected) =>
+        prevSelected.filter((id) => id !== elementId)
+      );
+    } else {
+      // If the product is not selected, add it
+      setSelected((prevSelected) => [...prevSelected, elementId]);
+    }
+  };
   return (
-    <div className="produit">
+    <div className="Produits">
       <div className="boxx">
         <div className="rectangle">
           <div className="title">
-            <b>Catalogue des produits</b>
+            <b>Catalogue des {Pr_Object.toLowerCase()}</b>
           </div>
 
-          <button
-            className="btnimport"
-            onClick={() => {
-              setModalOpen(true);
-            }}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clip-path="url(#clip0_32_461)">
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M4 1.39683V14.6032C4 15.3746 4.61561 16 5.375 16H14.625C15.3844 16 16 15.3746 16 14.6032V3.67563C16 3.30251 15.8531 2.9449 15.5919 2.68251L13.3239 0.403706C13.0665 0.145065 12.7191 0 12.357 0H5.375C4.61561 0 4 0.62538 4 1.39683ZM4.875 14.6032V1.39683C4.875 1.1163 5.09886 0.888889 5.375 0.888889H12.1875V3.93651C12.1875 4.46249 12.6072 4.88889 13.125 4.88889H15.125V14.6032C15.125 14.8837 14.9011 15.1111 14.625 15.1111H5.375C5.09886 15.1111 4.875 14.8837 4.875 14.6032ZM15.125 4V3.67563C15.125 3.53995 15.0716 3.40991 14.9766 3.3145L13.0625 1.39127V3.93651C13.0625 3.97157 13.0905 4 13.125 4H15.125Z"
-                  fill="white"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M10.25 6.5625C10.25 6.32088 10.4459 6.125 10.6875 6.125H13.5625C13.8041 6.125 14 6.32088 14 6.5625C14 6.80412 13.8041 7 13.5625 7H10.6875C10.4459 7 10.25 6.80412 10.25 6.5625Z"
-                  fill="white"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M10.25 8.5625C10.25 8.32088 10.4459 8.125 10.6875 8.125H13.5625C13.8041 8.125 14 8.32088 14 8.5625C14 8.80412 13.8041 9 13.5625 9H10.6875C10.4459 9 10.25 8.80412 10.25 8.5625Z"
-                  fill="white"
-                />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M10.25 10.5625C10.25 10.3209 10.4459 10.125 10.6875 10.125H13.5625C13.8041 10.125 14 10.3209 14 10.5625C14 10.8041 13.8041 11 13.5625 11H10.6875C10.4459 11 10.25 10.8041 10.25 10.5625Z"
-                  fill="white"
-                />
-                <path
-                  d="M0 4.625C0 4.21079 0.335786 3.875 0.75 3.875H8.25C8.66421 3.875 9 4.21079 9 4.625V12.125C9 12.5392 8.66421 12.875 8.25 12.875H0.75C0.335786 12.875 0 12.5392 0 12.125V4.625Z"
-                  fill="white"
-                />
-                <path
-                  d="M2.5 10.8857L3.90479 8.271L2.62988 5.875H3.60059L4.42432 7.48486L5.23096 5.875H6.19141L4.9165 8.30859L6.32129 10.8857H5.31982L4.40723 9.15283L3.49463 10.8857H2.5Z"
-                  fill="#64CCC5"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_32_461">
-                  <rect width="16" height="16" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-
-            <b>Importer</b>
-          </button>
-
-          <button className="btnmodif">
+          {/* <button className="btnmodif">
             <svg
               width="21"
               height="24"
@@ -142,8 +192,8 @@ const handleCheckboxChange = (index) => {
                 fill="#EEEEEE"
               />
             </svg>
-          </button>
-          <button className="btnsupprimer">
+          </button> */}
+          <button className="btnsupprimer1" onClick={handleDelete}>
             <svg
               width="17"
               height="16"
@@ -161,79 +211,76 @@ const handleCheckboxChange = (index) => {
             className="searchproduct"
             type="text"
             placeholder="Chercher.."
+            value={searchInput}
+            onChange={handleSearchChange}
           ></input>
-          <svg
-            className="searchicon1"
-            xmlns="http://www.w3.org/2000/svg"
-            x="0px"
-            y="0px"
-            width="18"
-            height="18"
-            viewBox="0 0 50 50"
-          >
-            <path d="M 21 3 C 11.621094 3 4 10.621094 4 20 C 4 29.378906 11.621094 37 21 37 C 24.710938 37 28.140625 35.804688 30.9375 33.78125 L 44.09375 46.90625 L 46.90625 44.09375 L 33.90625 31.0625 C 36.460938 28.085938 38 24.222656 38 20 C 38 10.621094 30.378906 3 21 3 Z M 21 5 C 29.296875 5 36 11.703125 36 20 C 36 28.296875 29.296875 35 21 35 C 12.703125 35 6 28.296875 6 20 C 6 11.703125 12.703125 5 21 5 Z"></path>
-          </svg>
 
           <form className="formprod" onSubmit={handleSubmit}>
             <input
               className="in"
               type="text"
-              name="productName"
+              name="Name"
               placeholder="Nom"
-              value={newProduct.productName || ""}
+              value={newElement.Name || ""}
               onChange={handleChange}
             />
             <input
               className="in"
               type="text"
-              name="productPrice"
+              name="Price"
               placeholder="Prix"
-              value={newProduct.productPrice || ""}
+              value={newElement.Price || ""}
               onChange={handleChange}
             />
             <input
               className="in"
               type="text"
-              name="productDescription"
+              name="Description"
               placeholder="Description"
-              value={newProduct.productDescription || ""}
+              value={newElement.Description || ""}
               onChange={handleChange}
             />
+
+            <select
+              className="in"
+              name="Stock"
+              value={newElement.Stock || ""}
+              onChange={handleChange}
+            >
+              <option value="" disabled>
+                Stock
+              </option>
+              {menuOptions.map((stock) => (
+                <option key={stock} value={stock.stock_id}>
+                  {stock.Nom}
+                </option>
+              ))}
+            </select>
+
             <input
               className="in"
               type="text"
-              name="productStock"
-              placeholder="Stock"
-              value={newProduct.productStock || ""}
+              name="Quantite"
+              placeholder="Quantite"
+              value={newElement.Quantite || ""}
               onChange={handleChange}
-              list="suggestions"
             />
-            <datalist id="suggestions">
-        <option value="Stock 1" />
-        <option value="Stock 2" />
-        <option value="Stock 3" />
-      </datalist>
-      <datalist id="suggestions2">
-        <option value="Produit" />
-        <option value="Nomenclature" />
-      </datalist>
-            <input
+            <select
               className="in"
-              type="text"
-              name="productSource"
-              placeholder="Source"
-              value={newProduct.productSource || ""}
+              name="Category"
+              value={newElement.Category || ""}
               onChange={handleChange}
-            />
-            <input
-              className="in"
-              type="text"
-              name="productCatégorie"
-              placeholder="Catégorie"
-              value={newProduct.productCatégorie || ""}
-              onChange={handleChange}
-              list="suggestions2"
-            />
+            >
+              <option value="" disabled>
+                Catégorie
+              </option>
+              {["Produit", "Nomenclature"].map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+
             <button className="btnajout" type="submit">
               <svg
                 width="14"
@@ -250,6 +297,7 @@ const handleCheckboxChange = (index) => {
               <b>Ajouter</b>
             </button>
           </form>
+
           <table className="tableproduct">
             <thead>
               <tr>
@@ -257,27 +305,27 @@ const handleCheckboxChange = (index) => {
                 <th>Prix</th>
                 <th>Description</th>
                 <th>Stock</th>
-                <th>Source</th>
+                <th>Quantité</th>
                 <th>Catégorie</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {productList.map((product, index) => (
-                <tr key={index}>
-                  <td>{product.productName}</td>
-                  <td>{product.productPrice}</td>
-                  <td>{product.productDescription}</td>
-                  <td>{product.productStock}</td>
-                  <td>{product.productSource}</td>
-                  <td>{product.productCatégorie}</td>
+              {filtered.map((element) => (
+                <tr key={element.produit_id}>
+                  <td>{element.Nom}</td>
+                  <td>{element.Prix}</td>
+                  <td>{element.Description}</td>
+                  <td>{element.Stock}</td>
+                  <td>{element.Quantite}</td>
+                  <td>{element.Categorie}</td>
                   <td className="checkbox-cell">
-              <input
-                type="checkbox"
-                checked={selections[index]}
-                onChange={() => handleCheckboxChange(index)}
-              />
-            </td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(element.produit_id)}
+                      onChange={() => handleCheckboxChange(element.produit_id)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>

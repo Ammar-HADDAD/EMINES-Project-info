@@ -7,7 +7,8 @@ import Navbar from "./Components/navbar";
 import Nomenclature from "./Components/Nomenclature";
 import Stock from "./Components/Stock";
 import Operation from "./Components/Operation";
-import './App.css';
+import Ordre from "./Components/OrdreDeFabrication";
+import "./App.css";
 
 const App = () => {
   return (
@@ -15,12 +16,10 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
-
-
       </Routes>
 
-
-      {window.location.pathname !== '/' && window.location.pathname !== '/signup' && <Navbar />}
+      {window.location.pathname !== "/" &&
+        window.location.pathname !== "/signup" && <Navbar />}
 
       <div className="container">
         <Routes>
@@ -29,6 +28,7 @@ const App = () => {
           <Route path="/nomenclature" element={<Nomenclature />} />
           <Route path="/stock" element={<Stock />} />
           <Route path="/operation" element={<Operation />} />
+          <Route path="/ordre" element={<Ordre />} />
         </Routes>
       </div>
     </BrowserRouter>
@@ -36,4 +36,3 @@ const App = () => {
 };
 
 export default App;
-
