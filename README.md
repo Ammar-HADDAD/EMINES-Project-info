@@ -1,6 +1,8 @@
-# Guide d'Installation
-
 # Projet info - MRP
+
+## Contexte générale
+
+Ce projet a été réalisé par Ammar HADDAD, Nada Sabri, et Youssef BENOAOUDA dans le cadre du projet informatique du semestre 5 de la formation dispensée à l'EMINES, l'École de Management Industriel.
 
 Avant de commencer, assurez-vous de suivre les étapes ci-dessous pour configurer l'environnement de développement.
 
